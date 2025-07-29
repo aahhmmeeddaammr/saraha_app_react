@@ -67,8 +67,10 @@ export const Dashboard = () => {
   };
   useEffect(() => {
     getUserMessages();
-    getProfile();
   }, []);
+  useEffect(() => {
+    getProfile();
+  }, [userId]);
   return (
     <div className="min-h-screen bg-background">
       <div className="max-md:w-11/12 w-9/12 mx-auto py-8 space-y-8">
