@@ -4,7 +4,7 @@ import App from "./App.tsx";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { Toaster } from "react-hot-toast";
 createRoot(document.getElementById("root")!).render(
-  <GoogleOAuthProvider clientId="501348923678-o2jni35638q31p2gg734scfm77ngiahq.apps.googleusercontent.com">
+  <GoogleOAuthProvider clientId="50200811809-ab6tmesot42bl18b5vlp3b3034ah9fd7.apps.googleusercontent.com">
     <App />
     <Toaster />
   </GoogleOAuthProvider>
