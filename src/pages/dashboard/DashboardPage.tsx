@@ -16,7 +16,7 @@ export const Dashboard = () => {
   const [messages, setMessages] = useState<MessageI[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [activeTab, setActiveTab] = useState("all");
-  const { userId, accessToken } = useAuth();
+  const { userId } = useAuth();
   const profileUrl = `${FRONTEND_URL}/user/${userId}`;
 
   const filteredMessages = messages.filter((message) => {
@@ -38,7 +38,6 @@ export const Dashboard = () => {
     likedMessages: messages.filter((m) => m.isLike).length,
     thisWeekMessages: messages.filter((m) => new Date(m.createdAt).getTime() > Date.now() - 7 * 24 * 60 * 60 * 1000).length,
   };
-  console.log(accessToken);
 
   const getUserMessages = async () => {
     axios
