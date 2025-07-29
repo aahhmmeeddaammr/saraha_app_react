@@ -125,5 +125,7 @@ export function useAuth() {
     formik,
     ...authContext,
     logOut,
+    setError,
+    setSignUpError,
   };
 }

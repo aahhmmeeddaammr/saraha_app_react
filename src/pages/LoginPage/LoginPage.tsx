@@ -8,7 +8,7 @@ import whisprLogo from "@/assets/image.png";
 import { GoogleLogin } from "@react-oauth/google";
 import { useAuth } from "@/hooks/useAuth";
 export const LoginPage = () => {
-  const { isLoading, error, signUpError, activeTab, setActiveTab, login, registerFormik, formik } = useAuth();
+  const { isLoading, error, signUpError, activeTab, setActiveTab, login, registerFormik, formik, setError, setSignUpError } = useAuth();
   return (
     <div className="min-h-screen bg-background">
       <header className="sticky top-0 z-50 w-full border-b border-border/50 bg-card/60 backdrop-blur-whispr">
@@ -35,6 +35,8 @@ export const LoginPage = () => {
               <TabsTrigger
                 onClick={() => {
                   setActiveTab("signin");
+                  setError("");
+                  setSignUpError("");
                 }}
                 value="signin"
               >
@@ -43,6 +45,8 @@ export const LoginPage = () => {
               <TabsTrigger
                 onClick={() => {
                   setActiveTab("signup");
+                  setError("");
+                  setSignUpError("");
                 }}
                 value="signup"
               >
