@@ -42,11 +42,7 @@ const router = createBrowserRouter([
   },
   {
     path: "user/:userId",
-    element: (
-      <ProtectedRoute>
-        <Profile />
-      </ProtectedRoute>
-    ),
+    element: <Profile />,
   },
 ]);
 const App = () => {
