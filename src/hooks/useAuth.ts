@@ -62,7 +62,7 @@ export function useAuth() {
     initialValues: registerInitialValues,
     onSubmit: (values) => {
       axios
-        .post("http://localhost:3001/auth/singup", values)
+        .post(`${API_BASEURL}/auth/singup`, values)
         .then(({ data }) => {
           toast.success("Signup complete. A confirmation link has been sent to your email.");
           setActiveTab("signin");
