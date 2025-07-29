@@ -1,5 +1,4 @@
 import { HeroSection } from "@/components/HeroSection/HeroSection";
-import React from "react";
 
 const Index = () => {
   return (
