@@ -96,7 +96,7 @@ export const Header = ({ user }: HeaderProps) => {
                   <Settings className="h-4 w-4" />
                   Settings
                 </Button> */}
-                <Button variant="outline" className="w-full justify-start">
+                <Button onClick={logOut} variant="outline" className="w-full justify-start">
                   <LogOut className="h-4 w-4" />
                   Logout
                 </Button>
