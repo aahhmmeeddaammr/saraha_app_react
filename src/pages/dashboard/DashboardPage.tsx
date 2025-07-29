@@ -16,6 +16,7 @@ export const Dashboard = () => {
   const [messages, setMessages] = useState<MessageI[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [activeTab, setActiveTab] = useState("all");
+  const [user, setUser] = useState<UserI | null>(null);
   const { userId } = useAuth();
   const profileUrl = `${FRONTEND_URL}/user/${userId}`;
 
@@ -54,8 +55,19 @@ export const Dashboard = () => {
         console.log(error);
       });
   };
+  const getProfile = async () => {
+    axios
+      .get(`${API_BASEURL}/user/profile/${userId}`)
+      .then(({ data }) => {
+        setUser(data.data);
+      })
+      .catch((error: AxiosError) => {
+        console.log(error);
+      });
+  };
   useEffect(() => {
     getUserMessages();
+    getProfile();
   }, []);
   return (
     <div className="min-h-screen bg-background">
@@ -63,7 +75,7 @@ export const Dashboard = () => {
         {/* Welcome Section */}
         <div className="text-center space-y-4">
           <h1 className="text-3xl md:text-4xl font-bold ">
-            Welcome back, <span className="text-primary">Ahmed Amr</span>
+            Welcome back, <span className="text-primary">{user?.fullName}</span>
           </h1>
           <p className="text-muted-foreground">Manage your anonymous messages and share your Whispr link</p>
         </div>
