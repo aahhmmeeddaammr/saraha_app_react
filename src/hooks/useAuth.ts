@@ -2,7 +2,7 @@ import { AuthContext } from "@/context/AuthContextProvider";
 import { API_BASEURL, providerEnum } from "@/lib/config/config";
 import axios from "axios";
 import { useFormik } from "formik";
-import { useContext, useEffect, useLayoutEffect, useState } from "react";
+import { useContext, useLayoutEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
@@ -93,7 +93,7 @@ export function useAuth() {
 
   const logOut = () => {
     axios
-      .get(`${API_BASEURL}/auth/logout`, { withCredentials: true })
+      .delete(`${API_BASEURL}/auth/logout`, { withCredentials: true })
       .catch((err) => console.error("Logout error", err))
       .finally(() => {
         authContext.setAuth({
@@ -143,16 +143,6 @@ export function useAuth() {
     return () => {
       api.interceptors.response.eject(resInterceptor);
     };
-  }, []);
-  useEffect(() => {
-    setIsLoading(true);
-    refreshAccessToken()
-      .catch(() => {
-        logOut();
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
   }, []);
   const formik = useFormik({
     initialValues: {
