@@ -7,8 +7,8 @@ import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from "@/hooks/useAuth";
 import { api } from "@/lib/api";
-import { API_BASEURL, FRONTEND_URL } from "@/lib/config/config";
-import axios, { AxiosError } from "axios";
+import { FRONTEND_URL } from "@/lib/config/config";
+import { AxiosError } from "axios";
 import { Search, Filter, SortAsc } from "lucide-react";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
@@ -119,9 +119,9 @@ export const Dashboard = () => {
                   filteredMessages.map((message) => (
                     <MessageCard
                       onLike={async () => {
-                        await axios
+                        await api
                           .patch(
-                            `${API_BASEURL}/message`,
+                            `/message`,
                             { messageId: message._id },
                             {
                               headers: {
@@ -140,8 +140,8 @@ export const Dashboard = () => {
                           });
                       }}
                       onDelete={async () => {
-                        await axios
-                          .delete(`${API_BASEURL}/message/${message._id}`, {
+                        await api
+                          .delete(`/message/${message._id}`, {
                             headers: {
                               Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
                             },
