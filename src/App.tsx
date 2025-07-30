@@ -32,11 +32,7 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: (
-          <ProtectedRoute auth={true}>
-            <LoginPage />
-          </ProtectedRoute>
-        ),
+        element: <LoginPage />,
       },
     ],
   },

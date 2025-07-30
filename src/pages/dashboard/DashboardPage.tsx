@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from "@/hooks/useAuth";
+import { api } from "@/lib/api";
 import { API_BASEURL, FRONTEND_URL } from "@/lib/config/config";
 import axios, { AxiosError } from "axios";
 import { Search, Filter, SortAsc } from "lucide-react";
@@ -41,12 +42,8 @@ export const Dashboard = () => {
   };
 
   const getUserMessages = async () => {
-    axios
-      .get(`${API_BASEURL}/message/my-messages`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-        },
-      })
+    api
+      .get(`/message/my-messages`)
       .then(({ data }) => {
         setMessages(data.data.messages.reverse());
         console.log(data.data.messages);
@@ -56,8 +53,8 @@ export const Dashboard = () => {
       });
   };
   const getProfile = async () => {
-    axios
-      .get(`${API_BASEURL}/user/profile/${userId}`)
+    api
+      .get(`/user/profile/${userId}`)
       .then(({ data }) => {
         setUser(data.data);
       })

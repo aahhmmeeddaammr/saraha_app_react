@@ -1,5 +1,4 @@
-import { jwtDecode } from "jwt-decode";
-import { createContext, useEffect, useState, type PropsWithChildren } from "react";
+import { createContext, useState, type PropsWithChildren } from "react";
 
 interface AuthState {
   accessToken: string | null;
@@ -28,14 +27,5 @@ export default function AuthProvider({ children }: PropsWithChildren) {
     setRefreshToken(data?.refreshToken || null);
     setUserId(data?.userId || null);
   };
-  useEffect(() => {
-    if (localStorage.getItem("accessToken") && localStorage.getItem("refreshToken")) {
-      setAuth({
-        accessToken: localStorage.getItem("accessToken"),
-        refreshToken: localStorage.getItem("refreshToken"),
-        userId: jwtDecode<{ userId: string }>(localStorage.getItem("accessToken") as string).userId,
-      });
-    }
-  }, []);
   return <AuthContext.Provider value={{ accessToken, refreshToken, userId, setAuth }}>{children}</AuthContext.Provider>;
 }

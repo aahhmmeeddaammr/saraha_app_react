@@ -2,10 +2,12 @@ import { AuthContext } from "@/context/AuthContextProvider";
 import { API_BASEURL, providerEnum } from "@/lib/config/config";
 import axios from "axios";
 import { useFormik } from "formik";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useLayoutEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
+import { api } from "@/lib/api";
+
 export function useAuth() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
@@ -14,105 +16,153 @@ export function useAuth() {
   const navigate = useNavigate();
   const authContext = useContext(AuthContext);
 
-  const initialValues = {
-    email: "",
-    password: "",
-  };
-
-  const formik = useFormik({
-    initialValues,
-    onSubmit: (values) => {
-      login({ provider: "system", values });
-    },
-  });
-
-  const login = ({ provider, idToken, values }: { provider: string; idToken?: string; values?: typeof initialValues }) => {
+  const login = ({ provider, idToken, values }: { provider: string; idToken?: string; values?: { email: string; password: string } }) => {
     setIsLoading(true);
-    const payload = provider == providerEnum.google ? { idToken } : values;
+    const payload = provider === providerEnum.google ? { idToken } : values;
+    const url = provider === providerEnum.google ? `${API_BASEURL}/auth/singup/gmail` : `${API_BASEURL}/auth/login`;
+
     axios
-      .post(provider == providerEnum.google ? `${API_BASEURL}/auth/singup/gmail` : `${API_BASEURL}/auth/login`, payload)
-      .then(({ data }) => {
-        localStorage.setItem("accessToken", data.data.accessToken);
-        localStorage.setItem("refreshToken", data.data.refreshToken);
+      .post(url, payload, { withCredentials: true })
+      .then((res) => {
+        const { accessToken, refreshToken } = res.data.data;
+        const decoded = jwtDecode<{ userId: string }>(accessToken);
         authContext.setAuth({
-          accessToken: data.data.accessToken,
-          refreshToken: data.data.refreshToken,
-          userId: jwtDecode<{ userId: string }>(data.data.accessToken).userId,
+          accessToken,
+          refreshToken,
+          userId: decoded.userId,
         });
-        toast.success("login successfully");
+        localStorage.setItem("isAuthentecated", "true");
+        toast.success("Login successful");
         navigate("/dashboard");
       })
-      .catch((error) => {
-        setError(error.response.data.message);
-        console.log("Error in signup", error.response.data.message);
+      .catch((err) => {
+        const message = err?.response?.data?.message || "Login failed";
+        setError(message);
+        console.error("Login error:", message);
       })
       .finally(() => {
         setIsLoading(false);
       });
   };
 
-  const registerInitialValues = {
-    fullName: "",
-    email: "",
-    password: "",
-    phone: "",
-  };
-
   const registerFormik = useFormik({
-    initialValues: registerInitialValues,
+    initialValues: {
+      fullName: "",
+      email: "",
+      password: "",
+      phone: "",
+    },
     onSubmit: (values) => {
       axios
-        .post(`${API_BASEURL}/auth/singup`, values)
-        .then(({ data }) => {
-          toast.success("Signup complete. A confirmation link has been sent to your email.");
+        .post(`${API_BASEURL}/auth/singup`, values, { withCredentials: true })
+        .then(() => {
+          toast.success("Signup successful. Check your email.");
           setActiveTab("signin");
-          console.log(data);
         })
-        .catch((error) => {
-          setSignUpError(error.response.data.message);
-          console.log("Fail to login", error.response.data.message);
+        .catch((err) => {
+          const message = err?.response?.data?.message || "Signup failed";
+          setSignUpError(message);
+          console.error("Signup error:", message);
         });
     },
   });
 
-  const logOut = () => {
-    localStorage.clear();
-    authContext.setAuth({
-      accessToken: null,
-      refreshToken: null,
-      userId: null,
-    });
-    navigate("/auth");
-  };
   const refreshAccessToken = async () => {
-    try {
-      const refreshToken = localStorage.getItem("refreshToken");
-      const { data } = await axios.get(`${API_BASEURL}/user/refresh-token`, {
-        headers: {
-          Authorization: `Bearer ${refreshToken}`,
-        },
-      });
-      localStorage.setItem("accessToken", data.data.accessToken);
-      const newData = {
-        userId: authContext.userId,
-        accessToken: data.data.accessToken,
-        refreshToken: data.data.refreshToken,
-      };
-      authContext.setAuth(newData);
-      return data.data.accessToken;
-    } catch (error) {
-      console.error("Failed to refresh token", error);
-      logOut();
-      return null;
-    }
-  };
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      refreshAccessToken();
-    }, 50 * 60 * 1000);
+    return axios
+      .get(`${API_BASEURL}/user/refresh-token`, {
+        withCredentials: true,
+      })
+      .then((res) => {
+        const { accessToken } = res.data.data;
+        const decoded = jwtDecode<{ userId: string }>(accessToken);
 
-    return () => clearTimeout(timeout);
+        authContext.setAuth({
+          accessToken,
+          refreshToken: null,
+          userId: decoded.userId,
+        });
+
+        return accessToken;
+      })
+      .catch((err) => {
+        console.error("Refresh token failed", err);
+        logOut();
+        return null;
+      });
+  };
+
+  const logOut = () => {
+    axios
+      .get(`${API_BASEURL}/auth/logout`, { withCredentials: true })
+      .catch((err) => console.error("Logout error", err))
+      .finally(() => {
+        authContext.setAuth({
+          accessToken: null,
+          refreshToken: null,
+          userId: null,
+        });
+        navigate("/auth");
+      });
+  };
+
+  useLayoutEffect(() => {
+    const reqInterceptor = api.interceptors.request.use((config) => {
+      if (authContext.accessToken) {
+        config.headers.Authorization = `Bearer ${authContext.accessToken}`;
+      }
+      config.withCredentials = true;
+      return config;
+    });
+
+    return () => {
+      api.interceptors.request.eject(reqInterceptor);
+    };
+  }, [authContext.accessToken]);
+
+  useLayoutEffect(() => {
+    const resInterceptor = api.interceptors.response.use(
+      (res) => res,
+      async (error) => {
+        const originalRequest = error.config;
+        if (error?.response?.data?.message === "Missing or invalid token" && !originalRequest._retry) {
+          originalRequest._retry = true;
+
+          return refreshAccessToken().then((newAccessToken) => {
+            if (newAccessToken) {
+              originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+              return api(originalRequest);
+            }
+            return Promise.reject(error);
+          });
+        }
+
+        return Promise.reject(error);
+      }
+    );
+
+    return () => {
+      api.interceptors.response.eject(resInterceptor);
+    };
   }, []);
+  useEffect(() => {
+    setIsLoading(true);
+    refreshAccessToken()
+      .catch(() => {
+        logOut();
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }, []);
+  const formik = useFormik({
+    initialValues: {
+      email: "",
+      password: "",
+    },
+    onSubmit: (values) => {
+      login({ provider: providerEnum.system, values });
+    },
+  });
 
   return {
     isLoading,
