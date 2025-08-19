@@ -16,7 +16,15 @@ export function useAuth() {
   const navigate = useNavigate();
   const authContext = useContext(AuthContext);
 
-  const login = ({ provider, idToken, values }: { provider: string; idToken?: string; values?: { email: string; password: string } }) => {
+  const login = ({
+    provider,
+    idToken,
+    values,
+  }: {
+    provider: string;
+    idToken?: string;
+    values?: { email: string; password: string };
+  }) => {
     setIsLoading(true);
     const payload = provider === providerEnum.google ? { idToken } : values;
     const url = provider === providerEnum.google ? `${API_BASEURL}/auth/singup/gmail` : `${API_BASEURL}/auth/login`;
@@ -25,6 +33,7 @@ export function useAuth() {
       .post(url, payload, { withCredentials: true })
       .then((res) => {
         const { accessToken, refreshToken } = res.data.data;
+        localStorage.setItem("token", accessToken);
         const decoded = jwtDecode<{ userId: string }>(accessToken);
         authContext.setAuth({
           accessToken,
@@ -92,8 +101,8 @@ export function useAuth() {
   };
 
   const logOut = () => {
-    axios
-      .delete(`${API_BASEURL}/auth/logout`, { withCredentials: true })
+    api
+      .delete(`/auth/logout`, { withCredentials: true })
       .catch((err) => console.error("Logout error", err))
       .finally(() => {
         authContext.setAuth({
@@ -101,6 +110,7 @@ export function useAuth() {
           refreshToken: null,
           userId: null,
         });
+        localStorage.clear();
         navigate("/auth");
       });
   };
@@ -153,7 +163,15 @@ export function useAuth() {
       login({ provider: providerEnum.system, values });
     },
   });
-
+  useLayoutEffect(() => {
+    if (localStorage.getItem("token")) {
+      authContext.setAuth({
+        accessToken: localStorage.getItem("token"),
+        refreshToken: null,
+        userId: jwtDecode<{ userId: string }>(localStorage.getItem("token") as string).userId,
+      });
+    }
+  }, []);
   return {
     isLoading,
     error,

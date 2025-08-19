@@ -21,7 +21,9 @@ export const Header = ({ user }: HeaderProps) => {
       <div className="max-md:w-11/12 w-9/12  flex h-16 items-center justify-between mx-auto">
         <Link to="/" className="flex items-center gap-3 ">
           <img src={whisprLogo} alt="Whispr" className="h-8 w-8 rounded-lg shadow-whispr" />
-          <h1 className="text-xl font-bold bg-gradient-to-br from-primary to-foreground/50  bg-clip-text text-transparent">Whispr</h1>
+          <h1 className="text-xl font-bold bg-gradient-to-br from-primary to-foreground/50  bg-clip-text text-transparent">
+            Whispr
+          </h1>
         </Link>
 
         <nav className="hidden md:flex items-center gap-6">
@@ -33,15 +35,22 @@ export const Header = ({ user }: HeaderProps) => {
               </Button> */}
               <NavLink
                 to={`/dashboard`}
-                className={"hover:bg-accent hover:text-accent-foreground flex gap-2 items-center px-2 py-1 rounded-md transition-all duration-300"}
+                className={
+                  "hover:bg-accent hover:text-accent-foreground flex gap-2 items-center px-2 py-1 rounded-md transition-all duration-300"
+                }
               >
                 <User className="h-4 w-4" />
-                Prfile
+                Dashboard
               </NavLink>
-              {/* <Button variant="ghost" size="sm">
-                <Settings className="h-4 w-4" />
-                Settings
-              </Button> */}
+              <NavLink
+                to={`/profile`}
+                className={
+                  "hover:bg-accent hover:text-accent-foreground flex gap-2 items-center px-2 py-1 rounded-md transition-all duration-300"
+                }
+              >
+                <User className="h-4 w-4" />
+                Profile
+              </NavLink>
               <div className="flex items-center gap-3">
                 <span className="text-sm text-muted-foreground">{user?.name}</span>
                 <Button onClick={logOut} variant="outline" size="sm">
@@ -81,21 +90,24 @@ export const Header = ({ user }: HeaderProps) => {
           <div className="container py-4 space-y-2 mx-auto">
             {userId ? (
               <>
-                {/* <Button variant="ghost" className="w-full justify-start">
-                  <MessageCircle className="h-4 w-4" />
-                  Messages
-                </Button> */}
                 <NavLink
                   to={`/dashboard`}
-                  className={"hover:bg-accent hover:text-accent-foreground flex gap-2 items-center px-2 py-1 rounded-md transition-all duration-300"}
+                  className={
+                    "hover:bg-accent hover:text-accent-foreground flex gap-2 items-center px-2 py-1 rounded-md transition-all duration-300"
+                  }
                 >
                   <User className="h-4 w-4" />
-                  Prfile
+                  Dashboard
                 </NavLink>
-                {/* <Button variant="ghost" className="w-full justify-start">
-                  <Settings className="h-4 w-4" />
-                  Settings
-                </Button> */}
+                <NavLink
+                  to={`/profile`}
+                  className={
+                    "hover:bg-accent hover:text-accent-foreground flex gap-2 items-center px-2 py-1 rounded-md transition-all duration-300"
+                  }
+                >
+                  <User className="h-4 w-4" />
+                  Profile
+                </NavLink>
                 <Button onClick={logOut} variant="outline" className="w-full justify-start">
                   <LogOut className="h-4 w-4" />
                   Logout

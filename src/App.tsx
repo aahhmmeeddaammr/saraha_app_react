@@ -7,6 +7,7 @@ import ProtectedRoute from "./components/security/protectedRoute";
 import { Dashboard } from "./pages/dashboard/DashboardPage";
 import { Profile } from "./pages/Profile/Profile";
 import AuthProvider from "./context/AuthContextProvider";
+import Account from "./pages/Acount/Acount";
 const router = createBrowserRouter([
   {
     path: "",
@@ -21,6 +22,14 @@ const router = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <Dashboard />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "profile",
+        element: (
+          <ProtectedRoute>
+            <Account />
           </ProtectedRoute>
         ),
       },
