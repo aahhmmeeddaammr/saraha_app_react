@@ -2,25 +2,15 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Mail, Lock, User, ArrowLeft, Phone } from "lucide-react";
+import { Mail, Lock, User, Phone } from "lucide-react";
 import { Link } from "react-router-dom";
-import whisprLogo from "@/assets/image.png";
 import { GoogleLogin } from "@react-oauth/google";
 import { useAuth } from "@/hooks/useAuth";
 export const LoginPage = () => {
-  const { isLoading, error, signUpError, activeTab, setActiveTab, login, registerFormik, formik, setError, setSignUpError } = useAuth();
+  const { isLoading, error, signUpError, activeTab, setActiveTab, login, registerFormik, formik, setError, setSignUpError } =
+    useAuth();
   return (
     <div className="min-h-screen bg-background">
-      <header className="sticky top-0 z-50 w-full border-b border-border/50 bg-card/60 backdrop-blur-whispr">
-        <div className="max-md:w-11/12 w-9/12 flex h-16 items-center justify-between mx-auto">
-          <Link to="/" className="flex items-center gap-3">
-            <ArrowLeft className="h-5 w-5" />
-            <img src={whisprLogo} alt="Whispr" className="h-8 w-8 rounded-lg shadow-whispr" />
-            <h1 className="text-xl font-bold bg-gradient-to-br from-primary to-foreground/50  bg-clip-text text-transparent">Whispr</h1>
-          </Link>
-        </div>
-      </header>
-
       <main className="container max-w-md mx-auto pt-16 pb-8">
         <section className="bg-card/90 backdrop-blur-whispr border border-border/50 rounded-lg shadow-whispr p-8">
           <div className="text-center mb-8">
@@ -67,14 +57,26 @@ export const LoginPage = () => {
                   <Label htmlFor="email">Email</Label>
                   <div className="relative">
                     <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                    <Input onChange={formik.handleChange} id="email" type="email" placeholder="Enter your email" className="pl-10" />
+                    <Input
+                      onChange={formik.handleChange}
+                      id="email"
+                      type="email"
+                      placeholder="Enter your email"
+                      className="pl-10"
+                    />
                   </div>
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="password">Password</Label>
                   <div className="relative">
                     <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                    <Input onChange={formik.handleChange} id="password" type="password" placeholder="Enter your password" className="pl-10" />
+                    <Input
+                      onChange={formik.handleChange}
+                      id="password"
+                      type="password"
+                      placeholder="Enter your password"
+                      className="pl-10"
+                    />
                   </div>
                 </div>
                 <div className="relative flex justify-center text-xs uppercase">
@@ -98,7 +100,12 @@ export const LoginPage = () => {
                 </div>
                 {error && (
                   <div className="flex items-center gap-2 bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded-lg shadow-sm animate-pulse">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-red-500" viewBox="0 0 20 20" fill="currentColor">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-5 w-5 text-red-500"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                    >
                       <path
                         fillRule="evenodd"
                         d="M10 18a8 8 0 100-16 8 8 0 000 16zm-.75-4.25a.75.75 0 011.5 0v.5a.75.75 0 01-1.5 0v-.5zm.75-8a.75.75 0 00-.75.75v4.5a.75.75 0 001.5 0v-4.5A.75.75 0 0010 5.75z"
@@ -108,6 +115,11 @@ export const LoginPage = () => {
                     <span>{error}</span>
                   </div>
                 )}
+                <div className="flex justify-end">
+                  <Link to={"/auth/forget-password"} className="hover:underline text-primary">
+                    Forget Password
+                  </Link>
+                </div>
                 <Button type="submit" variant="gradient" className="w-full" disabled={isLoading}>
                   Sign In
                 </Button>
@@ -175,7 +187,12 @@ export const LoginPage = () => {
                 </div>
                 {signUpError && (
                   <div className="flex items-center gap-2 bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded-lg shadow-sm animate-pulse">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-red-500" viewBox="0 0 20 20" fill="currentColor">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-5 w-5 text-red-500"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                    >
                       <path
                         fillRule="evenodd"
                         d="M10 18a8 8 0 100-16 8 8 0 000 16zm-.75-4.25a.75.75 0 011.5 0v.5a.75.75 0 01-1.5 0v-.5zm.75-8a.75.75 0 00-.75.75v4.5a.75.75 0 001.5 0v-4.5A.75.75 0 0010 5.75z"
@@ -211,7 +228,9 @@ export const LoginPage = () => {
             </TabsContent>
           </Tabs>
 
-          <p className="text-xs text-muted-foreground text-center mt-6">By continuing, you agree to our Terms of Service and Privacy Policy.</p>
+          <p className="text-xs text-muted-foreground text-center mt-6">
+            By continuing, you agree to our Terms of Service and Privacy Policy.
+          </p>
         </section>
       </main>
     </div>

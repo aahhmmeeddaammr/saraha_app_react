@@ -81,6 +81,7 @@ export const ProfileImageUpload = ({
     api
       .post(`${API_BASEURL}/user/upload-image`, formData)
       .then(({ data }) => {
+        toast.success("Image uploaded successfully");
         console.log(data);
       })
       .catch((error) => {

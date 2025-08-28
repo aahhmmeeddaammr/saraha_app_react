@@ -29,10 +29,6 @@ export const Header = ({ user }: HeaderProps) => {
         <nav className="hidden md:flex items-center gap-6">
           {userId ? (
             <>
-              {/* <Button variant="ghost" size="sm">
-                <MessageCircle className="h-4 w-4" />
-                Messages
-              </Button> */}
               <NavLink
                 to={`/dashboard`}
                 className={
@@ -61,12 +57,6 @@ export const Header = ({ user }: HeaderProps) => {
             </>
           ) : (
             <>
-              <Button variant="ghost" size="sm">
-                How it works
-              </Button>
-              <Button variant="ghost" size="sm">
-                About
-              </Button>
               <Button variant="gradient" size="sm" asChild>
                 <Link to="/auth">Sign In</Link>
               </Button>
@@ -115,12 +105,6 @@ export const Header = ({ user }: HeaderProps) => {
               </>
             ) : (
               <>
-                <Button variant="ghost" className="w-full justify-start">
-                  How it works
-                </Button>
-                <Button variant="ghost" className="w-full justify-start ">
-                  About
-                </Button>
                 <Button variant="gradient" className="w-full" asChild>
                   <Link to="/auth">Sign In</Link>
                 </Button>

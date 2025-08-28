@@ -8,6 +8,9 @@ import { Dashboard } from "./pages/dashboard/DashboardPage";
 import { Profile } from "./pages/Profile/Profile";
 import AuthProvider from "./context/AuthContextProvider";
 import Account from "./pages/Acount/Acount";
+import { ForgotPassword } from "./pages/ForgetPassword/ForgetPassword";
+import OTP from "./pages/otp/OTP";
+import ResetPassword from "./pages/resetPassword/ResetPassword";
 const router = createBrowserRouter([
   {
     path: "",
@@ -42,6 +45,18 @@ const router = createBrowserRouter([
       {
         index: true,
         element: <LoginPage />,
+      },
+      {
+        path: "forget-password",
+        element: <ForgotPassword />,
+      },
+      {
+        path: "otp",
+        element: <OTP />,
+      },
+      {
+        path: "reset-password",
+        element: <ResetPassword />,
       },
     ],
   },

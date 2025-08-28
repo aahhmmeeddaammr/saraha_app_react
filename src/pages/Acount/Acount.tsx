@@ -51,7 +51,7 @@ const Account = () => {
         .get(`${API_BASEURL}/user`)
         .then(({ data }) => {
           console.log(data.data);
-          setFormData({bio:data.data.bio , firstName :data.data.firstName,  lastName :data.data.lastName})
+          setFormData({ bio: data.data.bio, firstName: data.data.firstName, lastName: data.data.lastName });
           setUser({ ...data.data, profileUrl: `${FRONTEND_URL}/${data.data._id}` });
         })
         .catch((error) => {
@@ -248,7 +248,7 @@ const Account = () => {
                     rows={3}
                     maxLength={500}
                   />
-                  <p className="text-xs text-muted-foreground text-right">{formData.bio.length}/500 characters</p>
+                  <p className="text-xs text-muted-foreground text-right">{formData?.bio?.length ?? 0}/500 characters</p>
                 </div>
               </div>
             </Card>
