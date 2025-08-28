@@ -31,6 +31,7 @@ interface FormData {
   firstName: string;
   lastName: string;
   bio: string;
+  image?: File;
 }
 
 const Account = () => {
@@ -52,7 +53,7 @@ const Account = () => {
         .then(({ data }) => {
           console.log(data.data);
           setFormData({ bio: data.data.bio, firstName: data.data.firstName, lastName: data.data.lastName });
-          setUser({ ...data.data, profileUrl: `${FRONTEND_URL}/${data.data._id}` });
+          setUser({ ...data.data, profileUrl: `${FRONTEND_URL}/user/${data.data._id}` });
         })
         .catch((error) => {
           console.log(error);
@@ -72,8 +73,16 @@ const Account = () => {
 
     try {
       setIsSaving(true);
+      const formDataToSend = new FormData();
+      Object.entries(formData).forEach(([key, value]) => {
+        if (key === "image" && value instanceof File) {
+          formDataToSend.append("image", value);
+        } else if (value !== null && value !== undefined) {
+          formDataToSend.append(key, String(value));
+        }
+      });
       await api
-        .patch(`${API_BASEURL}/user`, formData)
+        .patch(`${API_BASEURL}/user/update-account`, formDataToSend)
         .then(() => {
           loadUserData();
         })
@@ -101,7 +110,10 @@ const Account = () => {
     setIsEditing(false);
   }, [user]);
 
-  const handleImageUpload = useCallback((imageUrl: string) => {
+  const handleImageUpload = useCallback((imageUrl: string, file?: File) => {
+    setFormData((prev) => {
+      return { ...prev, image: file };
+    });
     setUser((prev) => (prev ? { ...prev, picture: imageUrl } : null));
   }, []);
 

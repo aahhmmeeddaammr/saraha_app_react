@@ -2,14 +2,12 @@ import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Label } from "@/components/ui/label";
-import { Upload, Camera, Trash2, User, Save } from "lucide-react";
+import { Upload, Camera, Trash2, User } from "lucide-react";
 import toast from "react-hot-toast";
-import { api } from "@/lib/api";
-import { API_BASEURL } from "@/lib/config/config";
 
 interface ProfileImageUploadProps {
   currentImage?: string;
-  onImageUpload: (imageUrl: string) => void;
+  onImageUpload: (imageUrl: string, file?: File) => void;
   disabled?: boolean;
   userName?: string;
 }
@@ -52,7 +50,7 @@ export const ProfileImageUpload = ({
     setIsUploading(true);
     setTimeout(() => {
       const mockImageUrl = URL.createObjectURL(file);
-      onImageUpload(mockImageUrl);
+      onImageUpload(mockImageUrl, file);
       setIsUploading(false);
       toast.success("Profile image uploaded successfully!");
     }, 1500);
@@ -69,24 +67,6 @@ export const ProfileImageUpload = ({
 
   const triggerFileInput = () => {
     fileInputRef.current?.click();
-  };
-  // DONEE
-  const handleSaveImage = () => {
-    if (!fileInputRef.current?.files?.[0]) {
-      toast.error("choose new Image first");
-      return;
-    }
-    const formData = new FormData();
-    formData.append("image", fileInputRef.current?.files?.[0] as File);
-    api
-      .post(`${API_BASEURL}/user/upload-image`, formData)
-      .then(({ data }) => {
-        toast.success("Image uploaded successfully");
-        console.log(data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
   };
   const displayImage = preview || "";
 
@@ -147,16 +127,6 @@ export const ProfileImageUpload = ({
                 >
                   <Trash2 className="h-4 w-4" />
                   Remove
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={handleSaveImage}
-                  disabled={disabled || isUploading}
-                  className="flex items-center gap-2 text-primary hover:text-white"
-                >
-                  <Save className="h-4 w-4" />
-                  Save
                 </Button>
               </div>
             )}
