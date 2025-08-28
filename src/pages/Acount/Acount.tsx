@@ -103,7 +103,7 @@ const Account = () => {
     if (user) {
       setFormData({
         firstName: user.fullName.split(" ")[0],
-        lastName: user.username.split(" ")[1],
+        lastName: user.fullName.split(" ")[1],
         bio: user.bio || "",
       });
     }
