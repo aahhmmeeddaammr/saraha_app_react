@@ -45,13 +45,13 @@ const ResetPassword = () => {
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2">
-              <Label htmlFor="repassword">Confirm password:</Label>
+              <Label htmlFor="password">password:</Label>
               <div className="relative">
                 <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                 <Input
-                  id="repassword"
+                  id="password"
                   type="password"
-                  placeholder="Enter your rePassword"
+                  placeholder="Enter your password"
                   className="pl-10"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -60,13 +60,13 @@ const ResetPassword = () => {
               </div>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="email">OTP</Label>
+              <Label htmlFor="repassword">Confirm password</Label>
               <div className="relative">
                 <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                 <Input
-                  id="password"
+                  id="repassword"
                   type="password"
-                  placeholder="Enter your OTP"
+                  placeholder="Enter your confirm password"
                   className="pl-10"
                   value={rePassword}
                   onChange={(e) => setRePassword(e.target.value)}
